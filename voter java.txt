@@ -1,0 +1,23 @@
+function ageCalc(dob)
+{
+    var Dob=new Date(dob);
+    var month_diff=Date.now()-Dob.getTime();
+    var age_dt=new Date(month_diff);
+    var year=age_dt.getUTCFullYear();
+    var age=Math.abs(year-1970);
+    return age;// TODO - Write your logic here to calculate the age as per the given description
+}
+function electionvalidate()
+{
+    var dob=doucment.getElementById("dob").value;
+    age=ageCalc(dob);
+    doucment.getElementById("urage").innerHTML="your age is "+age;
+    if(age<18)
+    {
+        doucment.getElementById("result").innetHTML="you are not eligible to vote";
+    }
+    else
+    {
+        doucment.getElementById("result").innerHTML="you are not eligible to vote";
+    }
+}

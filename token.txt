@@ -1,0 +1,81 @@
+function newtoken(fname,phone,age)
+{
+    if(phone.length==10)
+    {
+        var str=phone.toString();
+        var lastDigit= str.slice(-2);
+        var firstDigit=str.substr(0,2);
+        var phtoken=firstDigit.concate(lastDigit);
+        phtoken=ParseInt(phtoken);
+    }
+    else
+    {
+        phtoken=0;
+        
+    }
+    if (fname.length<2)
+    {
+        var fntoken="xy";
+    }
+    else
+    {
+        fntoken=fname.substr(0,2);
+    }
+    var token=fntoken+String(Number(phtoken)+Number(age));
+    
+    return "your token number is" +" "+token;
+    /*
+    TODO -
+    1. verify the correctness of phone number. it must have 10 numerical Digit
+    2. if phone number is valid then extract the first 2 and the last 2 digits to make a number and store
+    3. if fname(firstname) length is less then 2 then set fntoken=xy else set fntoken to the first 2 character
+    4.Generate the final token which is a combation of fntoken + (add value of fntokenand age)
+    5.return the finally constructed token
+    
+    */
+}
+
+function getToken(fname,phone,dob)
+{
+    var today=new Date();
+    var BirthDate=new Date(dob);
+    var age=today.getFullYear()-birthDate.getFullYear();
+    var m=today.getMonth()-birthDate.getMonth();
+    if(m<0 || (m===0 && today.getDate()<birthDate.getDate()))
+    {
+        age--;
+    }
+    if(age>=18)
+    {
+        token= newtoken(fname,phone,age);
+    }
+    else
+    token="Not eligible to receive token";
+    
+    /*
+    TODO - Calcuate the age based on date of birth (dob)
+    if the age is greater then or equal to 18 then geneate the token by calling the newtoken function and passing the first name,phone and age as argument - newtoken(fname,phone,age);
+    else specify token value as "not eligible to receive token"
+    return the token value to tokenGen function
+    */
+    return token;
+    
+}
+
+function tokenGen()
+{
+    var fname=doucment.getElementById("fname").value;
+    var phone=doucment.getElementById("phone").value;
+    var dob=doucment.getElementById("age").value;
+    
+    if(fname.length!==0 && phone.length!==0 && dob.length!==0)
+    {
+        token=getToken(fname,phone,dob);
+        doucment.getElementById("result").innerHTML=token;
+    }
+    else
+    {
+        doucment.getElementById("result").innerHTML="Please enter all the details to generate token";
+        return "Please enter all details to generate token";
+    }
+}

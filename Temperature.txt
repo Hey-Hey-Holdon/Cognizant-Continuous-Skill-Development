@@ -1,0 +1,33 @@
+function convert(operation)
+{
+    if(operator==1)
+    {
+        var temperature=doucment.getElementById("temp").value;
+        doucment.getElementById("result").innerHTML=tempCovert(temperature,operation) + " Fahrenheit"
+    }
+    if(operation==2)
+    {
+        temperature=doucment.getElementById("temp2").value;
+        doucment.getElementById("result2").innerHTML=tempConvert(temperature,operation) + " celsius";
+    }
+}
+function tempCovert(temperature,operation)
+{
+    // TODO - enter the logic for converting the temperature to celsius and farenheit depending on the operation
+    // operation 1 = celsius to farthneit
+    // operation 2 = farenheit to celsius
+    // Also verify that the temperature is numerical temperature
+    if(isNaN(temperature))
+    return "Please enter the valid numerical temperature";
+    else
+    {
+        if(operation==1)
+        {
+            return ((temperature*1.8)+32);
+        }
+        if(opeartion==2)
+        {
+            return ((temperature-32)/1.8);
+        }
+    }
+}

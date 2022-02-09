@@ -1,0 +1,61 @@
+function fixappointment(patientname,appoinmentdate,specifiy,prefferedtime){
+   
+    var d = new Date();
+   
+    var currentHour = d.getHours();
+   
+    var appoinmenttime;
+   
+    var currentMonth = d.getMonth();
+   
+    var currentYear = d.getFullYear();
+   
+    var currentDate = new Date().getDate();
+   
+   
+    if((currentHour>=8 && currentHour<=12 && prefferdtime==="Morining") || (currentHour>=16 && currentHour<=22 && prefferdtime==="Eveining")){
+       
+        appoinmenttime = currentHour
+       
+    }
+    else if((currentHour>=8 && currentHour<=12 && prefferedtime === "Eveining")){
+        appoinmenttime = 16;
+    }
+    else if((cuurentHour>12 && currentHour<16 && prefferedtime === "Morining")){
+        appoinmenttime = 8;
+        appoinment = new Date(currentDate,currentMonth,d,getDate()+1)
+    }else if(currentHour>12 && currentHour<16 && prefferedtime === "Eveining"){
+        appoinmenttime = currentHour+3;
+    }else if(currentHour>16 && currentHour<=22 && prefferdtime ==="Morining"){
+        appoinmenttime = 9;
+        appoinmentdate = new Date(currentYear,currentMonth,d.getDate()+1);
+    }
+    var appstatus = patientname+ " your appointment is confirmed on "+ appointmentdate + " for the speciality " + speciality + " at " + appointmenttime + ":00";
+   
+    return appstatus;
+}
+function Booking(){
+   
+   
+    var patient = document.getElementById("patientname").value;
+    var appoinmentdate = document.getElementById("appoinment").value;
+    var prefferedtimen = document.getElementById()
+    var speciality = doucment.getElementById("speciality").value;
+   
+    if(validateDate(appointmentdate) === true){
+        var appstatus = fixappointment(patientname,appointmentdate,speciality,prefferedtime);
+        doucment.getElementById("speciality").value;
+    }
+    else{
+        document.getElementById("result").innetHTML = appstatus;
+    }
+}
+function validateDate(appointmentdate){
+    var currentDate = new Date.getDate();
+   
+    if(appointmentdate === currentDate){
+        return true;
+    }else{
+        return false;
+    }
+}
