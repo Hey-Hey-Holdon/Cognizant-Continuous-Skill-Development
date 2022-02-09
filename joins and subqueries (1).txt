@@ -1,0 +1,60 @@
+JOins
+------------------------------------------------------------
+1.select claims.id,claims.date_of_claim,claims.amount_of_claim from claims
+join status on claims.status_id=status.id where status.description='Inprogress' order By claims.id
+GO
+
+2.SELECT c.id,c.first_name,p.policy_start_date,p.policy_renewal_date,p.premium_amount,p.policy_value from customer c 
+join customer_policy p on c.id=p.customer_id order BY c.first_name;
+GO
+
+3.SELECT c.id, c.first_name,cp.policy_start_date,cp.policy_renewal_date,cp.premium_amount,cp.policy_value FROM customer c
+JOIN customer_policy cp ON c.id=cp.customer_id
+JOIN policy ON policy.id=cp.policy_id WHERE policy.name='Medical Insurance'OR policy.name='Vehicle Insurance' ORDER BY c.id asc;
+GO
+
+4.SELECT policy.name from policy 
+JOIN customer_policy on policy.id=customer_policy.policy_id
+JOIN customer on customer.id=customer_policy.customer_id
+WHERE customer.first_name='Meena' And customer.last_name='Chowdhury' ORDER BY policy.name;
+GO
+------------------------------------------------------------
+Aggregate functions
+
+1.SELECT count(address.city) AS customer_count FROM address JOIN customer c on c.address_id=address.id
+WHERE c.phone_number LIKE '7%'OR c.phone_number LIKE '8%' GROUP BY address.city HAVING address.city='Bangalore'
+GO 
+
+2.select c.first_name from customer c
+join customer_policy cp on c.id = cp.customer_id
+join claims cs on cp.id = cs.customer_policy_id
+where cs.amount_of_claim = (select max(amount_of_claim) from claims);
+GO
+--------------------------------------------------------------------------
+sub queries
+
+1.select first_name from customer
+JOIN customer_policy cp on customer.id=cp.customer_id
+JOIN claims on cp.id=claims.customer_policy_id
+WHERE amount_of_claim=
+(select min(amount_of_claim) from claims);
+GO
+
+2.select ic.id,name from insurance_company ic JOIN address a on a.id=ic.address_id
+WHERE a.city='Thane' ORDER BY ic.name
+GO
+
+3.select first_name from customer
+where id=(select top 1 cp.customer_id from customer_policy cp
+group by cp.customer_id order by count(cp.policy_id) desc)
+union
+select first_name from customer
+where id not in(select customer_id from customer_policy);
+GO
+
+4.select count(status_id) as number_of_claims from claims
+join status on claims.status_id =status.id where status.description="Completed"
+union all select count(status_id) as number_of_claims from claims
+join status on claims.status_id=status.id where status.description="Pending";
+GO
+--------------------------------------------------------------------------------

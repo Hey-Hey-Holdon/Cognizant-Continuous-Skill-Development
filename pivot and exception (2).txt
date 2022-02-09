@@ -1,0 +1,91 @@
+Pivot
+-------------------------------------------------------------------------------------------------
+SELECT customer_count,[250000],[75000],[45000]
+FROM(
+ SELECT 'customerCount' AS customer_count,customer_id,policy_value
+ FROM customer_policy)as temp
+PIVOT(
+count(customer_id)
+FOR policy_value in ([250000],[75000],[45000])) AS pvt
+ GO
+-------------------------------------------------------------------------------------------------------
+select name,[2000], [2001], [2004], [2005], [2006], [2008], [2010], [2012], [2015]
+from (
+select po.name as name,YEAR(cp.policy_start_date) as year, cp.policy_id as id 
+from policy po , customer_policy cp where (po.id=cp.policy_id)
+)
+as t1
+PIVOT
+(    
+COUNT(id) for year in ([2000], [2001], [2004], [2005], [2006], [2008], [2010], [2012], [2015]))
+as pvt
+GO
+--------------------------------------------------------------------------------------------------------
+select
+year,
+JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, 
+JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+from
+(
+select 
+YEAR(date_of_claim) as year, 
+datename(month, date_of_claim) as months,
+id
+from claims)
+as srcTable
+PIVOT
+(
+count(id)
+for months in (JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, 
+JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER)
+) as pivotTable;
+GO
+
+---------------------------------------------------------
+MERGE updated_policy as Target 
+USING policy as Source
+ON(Target.id=Source.id)
+WHEN Matched and Target.name <> Source.name
+THEN update Set Target.name=Source.name
+WHEN not Matched by Source
+THEN delete
+output $action,
+Deleted.id as Targetid,
+Deleted.name as Targetname,
+Deleted.description as Targetdescription,
+Deleted.insurance_company_id as Targetinsurance_company_id,
+Inserted.id as Sourceid,
+Inserted.name as Sourcename,
+Inserted.description as Sourcedescription,
+Inserted.insurance_company_id as Sourceinsurance_company_id;
+GO
+-------------------------------------------------------------
+Exception
+----------------------------------------------------------------------------
+create function find_customer_detail(@cus_id int)
+returns varchar(200)
+as
+Begin
+declare @cus_success varchar(300),@cus_error varchar(30)
+set @cus_success=null
+set @cus_error ='Customer Not Available'
+set @cus_success = (select concat(customer.first_name,' ',customer.last_name,' ',customer.phone_number) from customer where id=@cus_id)
+if(@cus_success is null )
+return @cus_error
+return @cus_success;
+end
+go
+-----------------------------------------------------------------
+create proc noofyears (@premium_amt int, @claim_amount int)
+as
+begin
+declare @no_of_years int;
+begin try
+set @no_of_years = @claim_amount/(@premium_amt*12);
+select 'Customer has to pay '+cast(@premium_amt as varchar(20))+' for '+cast(@no_of_years as varchar(20)) as success_msg into success_log
+end try
+begin catch
+select 'Premium amount is 0' as error_msg into premium_error_log
+end catch
+end;
+GO

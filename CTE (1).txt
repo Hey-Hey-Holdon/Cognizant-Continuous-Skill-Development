@@ -1,0 +1,23 @@
+CTE
+-------------------------------------------------------------------------------------
+1.WITH rank_customer(customer_name, claim_amount,rank)
+AS
+(
+SELECT c.first_name,sum(claims.amount_of_claim),
+RANK() OVER (ORDER BY sum(claims.amount_of_claim)DESC)
+FROM customer c join customer_policy cp on cp.customer_id=c.id
+JOIN claims on cp.id=claims.customer_policy_id GROUP BY c.first_name
+
+)
+SELECT customer_name, claim_amount,rank FROM rank_customer ORDER BY RANK 
+GO
+
+2.WITH offered_policy(insurance_company_name,policy_count)
+AS
+(
+  SELECT ic.name,count(policy.id) from insurance_company ic
+  JOIN policy on ic.id=policy.insurance_company_id GROUP By ic.name
+)
+SELECT insurance_company_name FROM offered_policy
+WHERE policy_count>1 ORDER BY insurance_company_name
+GO
